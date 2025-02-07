@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/logger_server.dir/services/LoggerServer.cpp.o -o logger_server  /usr/lib/x86_64-linux-gnu/libboost_system.so 
