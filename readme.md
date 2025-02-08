@@ -23,6 +23,7 @@ This project implements a real-time sensor data monitoring system using C++. It 
    - Uses a **Kalman filter** to smooth data and detect anomalies.
 
 3. **Logger** (Process)
+   - Makes use of Boost MessageQueue to publish logs
    - Logs sensor readings and anomalies.
    - Alerts when abnormal values are detected.
 
