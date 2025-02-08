@@ -31,10 +31,10 @@ if(NOT BOOST_INTERPROCESS_HEADER_FOUND)
 endif()
 
 # Include directories for public headers.
-# This covers include/logging, include/network, include/sensor, etc.
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/utils
+    ${PROJECT_SOURCE_DIR}/src/logging  # For your logging-related sources/headers
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -78,3 +78,16 @@ add_executable(sensor_client
 )
 
 target_link_libraries(sensor_client ${Boost_LIBRARIES})
+
+# -------------------------------------------------------------------
+# Set Log Level Utility executable (set_log_level)
+#
+# This target builds a small utility that sends a command (via Boost.Interprocess)
+# to update the global log level in your running processes.
+# The source file is located in src/logging/setLogLevel.cpp.
+# -------------------------------------------------------------------
+add_executable(set_log_level
+    src/logging/setLogLevel.cpp
+)
+
+target_link_libraries(set_log_level ${Boost_LIBRARIES})

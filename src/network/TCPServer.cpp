@@ -15,16 +15,13 @@ void TCPServer::do_accept() {
         [this](boost::system::error_code ec, tcp::socket socket) {
             if (!ec) {
                 TRACE_INFO("A new TCP connections is accepted");
-                // Create a new session.
+
                 auto session = std::make_shared<TCPSession>(std::move(socket), sensorBuffer_);
-                // Add the session to the connection manager.
                 connectionManager_.add(session);
-                // Start the session.
                 session->start();
             } else {
-                std::cerr << "Accept error: " << ec.message() << std::endl;
+                TRACE_ERROR("Error occured during socket acception: %s", ec.message());
             }
-            // Continue accepting connections.
             do_accept();
         }
     );

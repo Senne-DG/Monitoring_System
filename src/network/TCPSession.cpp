@@ -1,6 +1,8 @@
-#include "network/TCPSession.hpp"
 #include <iostream>
 #include <boost/asio.hpp>
+
+#include "network/TCPSession.hpp"
+#include "logging/LoggerClient.hpp"
 
 TCPSession::TCPSession(tcp::socket socket,
                        CircularBuffer<SensorData, 1024>& buffer)
@@ -10,14 +12,16 @@ TCPSession::TCPSession(tcp::socket socket,
 }
 
 void TCPSession::start() {
+    TRACE_INFO("TCPSessions started");
     do_read();
 }
 
 void TCPSession::stop() {
+    TRACE_INFO("TCPSessions stopped");
     boost::system::error_code ec;
     socket_.close(ec);
     if (ec) {
-        std::cerr << "Error closing socket: " << ec.message() << std::endl;
+        TRACE_ERROR("Error occured during closing socket: %s", ec.what());
     }
 }
 
@@ -27,16 +31,12 @@ void TCPSession::do_read() {
         boost::asio::buffer(&data_, sizeof(SensorData)),
         [this, self](boost::system::error_code ec, std::size_t /*length*/) {
             if (!ec) {
-                // Push received sensor data into the shared circular buffer.
                 sensorBuffer_.in(data_);
-                int size = sensorBuffer_.size();
-                std::cout << "Received sensor data: ID=" << data_.id
-                          << ", Temperature=" << data_.temperature << ", Buffer size=" << size << std::endl;
+                TRACE_INFO("Received sensor data: ID=%d, Temperature=%f", data_.id, data_.temperature);
                 do_read();
             } else {
-                std::cerr << "Read error: " << ec.message() << std::endl;
-                // Optionally, you could notify the connection manager here.
-                // For now, simply stop the session.
+                TRACE_ERROR("Error during reading: %s", ec.what());
+                // TODO:: notify the connection manager here.
                 stop();
             }
         }
