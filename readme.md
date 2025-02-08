@@ -14,8 +14,8 @@ This project implements a real-time sensor data monitoring system using C++. It 
 ## Architecture
 ### Components
 1. **Sensor Simulator** (Process)
-   - Simulates sensor readings (temperature).
-   - Sends data over a TCP connection.
+   - Simulates temperature sensor readings.
+   - Sends data over a TCP connection (Boost asio).
 
 2. **Data Processing** (Process)
    - Receives and processes incoming sensor data.
@@ -27,15 +27,19 @@ This project implements a real-time sensor data monitoring system using C++. It 
    - Logs sensor readings and anomalies.
    - Alerts when abnormal values are detected.
 
-4. **Real-time Plotter** (Process or Thread)
-   - Displays live sensor data using **Matplotlib-cpp** or **ImGui + ImPlot**.
+4. **Real-time Plotter**
+   - Displays live sensor data using **Matplotlib-cpp**.
+
+   - Example:
+   ![Temperature plot](images/temperature_plot_example.png)
+
 
 ## Installation
 ### Prerequisites
 - **C++17 or later**
 - **CMake**
 - **Boost.Asio** (for networking)
-- **Matplotlib-cpp / ImPlot** (for visualization)
+- **Matplotlib-cpp** (for visualization)
 
 ### Building the Project
 ```sh
@@ -47,18 +51,28 @@ make
 ## Running the System
 1. Start the **Monitoring System**:
    ```sh
-   ./monitoring_system
+   ./monitoringSystem
    ```
 2. Start the **Sensor Client**:
    ```sh
-   ./sensor_client
+   ./sensorClient
    ```
 3. Start the **Logger**:
    ```sh
-   ./logger_server
+   ./loggerServer
    ```
 4. Set the **Log Level**:
    ```sh
-   ./set_log_level
+   ./setLogLevel
    ```
 
+## Starting Scripts
+Some shell scripts have been created for easy starting/stopping of the full system.
+1. Start all processes
+   ```sh
+   ./startAll.sh
+   ```
+2. Stop all processes
+   ```sh
+   ./stopAll.sh
+   ```
