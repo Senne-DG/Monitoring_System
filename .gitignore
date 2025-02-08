@@ -25,6 +25,10 @@ venv/
 # data
 plot_data.dat
 
-# png
+# Ignore everything in the images/ folder
 *.png
+
+# Allow PNG files in all subdirectories
+!images/**/*.png
+
 

@@ -30,7 +30,6 @@ This project implements a real-time sensor data monitoring system using C++. It 
 4. **Real-time Plotter**
    - Displays live sensor data using **Matplotlib-cpp**.
 
-   - Example:
    ![Temperature plot](images/temperature_plot_example.png)
 
 
