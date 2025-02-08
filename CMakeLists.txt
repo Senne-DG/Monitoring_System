@@ -1,15 +1,18 @@
 cmake_minimum_required(VERSION 3.10)
 project(MonitoringSystem VERSION 1.0)
 
-# Set the C++ standard.
+# -------------------------------------------------------------------
+# Set C++ Standard
+# -------------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Force module mode for Boost.
+# -------------------------------------------------------------------
+# Find Required Libraries
+# -------------------------------------------------------------------
+# Boost (Required for Asio)
 set(Boost_NO_BOOST_CMAKE ON)
-
-# Find Boost (we require at least Boost.System for Asio).
 find_package(Boost REQUIRED COMPONENTS system)
 
 if(Boost_FOUND)
@@ -18,33 +21,28 @@ else()
     message(FATAL_ERROR "Boost not found!")
 endif()
 
-# Optionally, verify that the Boost.Interprocess header is present.
-set(BOOST_INTERPROCESS_HEADER_FOUND OFF)
-foreach(dir ${Boost_INCLUDE_DIRS})
-    if(EXISTS "${dir}/boost/interprocess/ipc/message_queue.hpp")
-        set(BOOST_INTERPROCESS_HEADER_FOUND ON)
-    endif()
-endforeach()
+# Python3 (Required for matplotlib-cpp)
+find_package(Python3 REQUIRED COMPONENTS Development)
 
-if(NOT BOOST_INTERPROCESS_HEADER_FOUND)
-    message(FATAL_ERROR "Could not find boost/interprocess/ipc/message_queue.hpp in Boost include directories!")
-endif()
+# ncurses (Required for terminal plotting)
+find_package(Curses REQUIRED)
 
-# Include directories for public headers.
+# -------------------------------------------------------------------
+# Include Directories
+# -------------------------------------------------------------------
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/utils
     ${PROJECT_SOURCE_DIR}/src/logging
     ${Boost_INCLUDE_DIRS}
+    ${Python3_INCLUDE_DIRS}
+    ${CURSES_INCLUDE_DIR}  # Include ncurses
+    ${PROJECT_SOURCE_DIR}/thirdParty/matplotlib-cpp
+    /home/SXD12011/project/monitoring_system/venv/lib/python3.12/site-packages/numpy/_core/include  # Ensure NumPy support
 )
 
 # -------------------------------------------------------------------
-# Main Application executable (monitoring_system)
-#
-# This target includes:
-#   - main.cpp (which spawns the network thread)
-#   - NetworkThread.cpp (which sets up the TCP server)
-#   - TCP server related sources: TCPServer.cpp, TCPSession.cpp, TCPConnectionManager.cpp
+# Main Application Executable (monitoringSystem)
 # -------------------------------------------------------------------
 add_executable(monitoringSystem
     src/main.cpp
@@ -53,15 +51,19 @@ add_executable(monitoringSystem
     src/network/TCPServer.cpp
     src/network/TCPSession.cpp
     src/network/TCPConnectionManager.cpp
+    src/plotting/Plotter.cpp
+    src/plotting/TerminalPlotter.cpp
 )
 
-target_link_libraries(monitoringSystem ${Boost_LIBRARIES})
+# Link Required Libraries
+target_link_libraries(monitoringSystem
+    ${Boost_LIBRARIES}
+    ${Python3_LIBRARIES}
+    ${CURSES_LIBRARIES}  # Link ncurses for terminal plotting
+)
 
 # -------------------------------------------------------------------
-# Logger Server executable (logger_server)
-#
-# This target builds your separate logging process.
-# It will have access to the logging headers from include/logging.
+# Logger Server Executable (loggerServer)
 # -------------------------------------------------------------------
 add_executable(loggerServer
     services/LoggerServer.cpp
@@ -70,9 +72,7 @@ add_executable(loggerServer
 target_link_libraries(loggerServer ${Boost_LIBRARIES})
 
 # -------------------------------------------------------------------
-# Sensor Client executable (sensor_client)
-#
-# This target simulates sensor data by connecting to the TCP server.
+# Sensor Client Executable (sensorClient)
 # -------------------------------------------------------------------
 add_executable(sensorClient
     clients/SensorClient.cpp
@@ -81,14 +81,30 @@ add_executable(sensorClient
 target_link_libraries(sensorClient ${Boost_LIBRARIES})
 
 # -------------------------------------------------------------------
-# Set Log Level Utility executable (set_log_level)
-#
-# This target builds a small utility that sends a command (via Boost.Interprocess)
-# to update the global log level in your running processes.
-# The source file is located in src/logging/setLogLevel.cpp.
+# Add Terminal Plotter Executable (Separate Process)
 # -------------------------------------------------------------------
-add_executable(set_log_level
+add_executable(terminalPlotter
+    src/plotting/TerminalPlotter.cpp
+    src/plotting/main.cpp
+)
+
+target_link_libraries(terminalPlotter
+    ${CURSES_LIBRARIES}
+)
+
+# -------------------------------------------------------------------
+# Set Log Level Utility Executable (setLogLevel)
+# -------------------------------------------------------------------
+add_executable(setLogLevel
     src/logging/setLogLevel.cpp
 )
 
-target_link_libraries(set_log_level ${Boost_LIBRARIES})
+target_link_libraries(setLogLevel ${Boost_LIBRARIES})
+
+# -------------------------------------------------------------------
+# Status Messages
+# -------------------------------------------------------------------
+message(STATUS "C++ Standard: ${CMAKE_CXX_STANDARD}")
+message(STATUS "Boost Include Dir: ${Boost_INCLUDE_DIRS}")
+message(STATUS "Python3 Include Dir: ${Python3_INCLUDE_DIRS}")
+message(STATUS "ncurses Include Dir: ${CURSES_INCLUDE_DIR}")

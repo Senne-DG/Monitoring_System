@@ -18,3 +18,13 @@ build/
 # Other IDE or OS specific files
 .DS_Store
 Thumbs.db
+
+# venv
+venv/
+
+# data
+plot_data.dat
+
+# png
+*.png
+

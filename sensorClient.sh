@@ -21,7 +21,6 @@ start() {
     fi
 
     echo "Starting $APP_NAME with arguments: $@"
-    # Forward all extra arguments to the executable.
     $APP_EXEC "$@" &
     PID=$!
     echo $PID > "$PID_FILE"
@@ -71,7 +70,6 @@ restart() {
 # Parse the action command.
 case "$1" in
     start)
-        # Remove the first argument and pass the rest (like "-p 8080") to the start function.
         shift
         start "$@"
         ;;
