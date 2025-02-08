@@ -1,5 +1,0 @@
-/home/SXD12011/project/monitoring_system/build/CMakeFiles/monitoring_system.dir
-/home/SXD12011/project/monitoring_system/build/CMakeFiles/logger_server.dir
-/home/SXD12011/project/monitoring_system/build/CMakeFiles/sensor_client.dir
-/home/SXD12011/project/monitoring_system/build/CMakeFiles/edit_cache.dir
-/home/SXD12011/project/monitoring_system/build/CMakeFiles/rebuild_cache.dir

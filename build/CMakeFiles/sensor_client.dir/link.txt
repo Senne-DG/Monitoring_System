@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/sensor_client.dir/clients/SensorClient.cpp.o -o sensor_client  /usr/lib/x86_64-linux-gnu/libboost_system.so 
