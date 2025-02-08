@@ -3,23 +3,23 @@
 #include <ctime>
 #include <cstring>
 #include <iomanip>
-
+#include <iostream>
 
 enum LogLevel {
-    TRACE_DEBUG,
-    TRACE_INFO,
-    TRACE_WARN,
-    TRACE_ERROR,
-    TRACE_FATAL
+    TRACE_FATAL,  // 0: most severe
+    TRACE_ERROR,  // 1
+    TRACE_WARN,   // 2
+    TRACE_INFO,   // 3
+    TRACE_DEBUG   // 4: least severe
 };
 
 inline const char* logLevelToString(LogLevel level) {
     switch(level) {
-        case TRACE_DEBUG: return "[DEBUG]";
-        case TRACE_INFO:  return "[INFO]";
-        case TRACE_WARN:  return "[WARN]";
-        case TRACE_ERROR: return "[ERROR]";
-        case TRACE_FATAL: return "[FATAL]";
+        case TRACE_FATAL: return "[FATAL]  ";
+        case TRACE_ERROR: return "[ERROR]  ";
+        case TRACE_WARN:  return "[WARN]   ";
+        case TRACE_INFO:  return "[INFO]   ";
+        case TRACE_DEBUG: return "[DEBUG]  ";
         default:          return "[UNKNOWN]";
     }
 }

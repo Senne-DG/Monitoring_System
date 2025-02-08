@@ -12,9 +12,13 @@
 
 #include "LogCommon.hpp"
 
-inline LogLevel g_logThreshold = TRACE_DEBUG;
+inline LogLevel g_logThreshold = TRACE_INFO;
 
-inline const char* shortenFile(const char* file) {
+// Flag for checking the the MQ is available for logging
+inline bool g_loggingAvailable = true;
+
+inline const char* shortenFile(const char* file)
+{
     const char* project = "monitoring_system";
     const char* pos = std::strstr(file, project);
     if (pos) {
@@ -27,7 +31,8 @@ inline const char* shortenFile(const char* file) {
     return file;
 }
 
-inline std::string string_format(const char* fmt, ...) {
+inline std::string string_format(const char* fmt, ...)
+{
     va_list args;
     va_start(args, fmt);
     va_list args_copy;
@@ -40,8 +45,14 @@ inline std::string string_format(const char* fmt, ...) {
     return std::string(buffer.data(), len);
 }
 
-inline void logMessage(LogLevel level, const std::string &msg) {
-    if (level < g_logThreshold)
+inline void logMessage(LogLevel level, const std::string &msg)
+{
+
+    if (!g_loggingAvailable) {
+        return;
+    }
+
+    if (level > g_logThreshold)
         return;
 
     try {
@@ -62,6 +73,7 @@ inline void logMessage(LogLevel level, const std::string &msg) {
     }
     catch(boost::interprocess::interprocess_exception &ex) {
         std::cerr << "Logging failed: " << ex.what() << std::endl;
+        g_loggingAvailable = false;
     }
 }
 

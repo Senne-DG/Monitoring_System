@@ -21,7 +21,6 @@ inline void controlThread() {
             if (controlMQ.try_receive(&newLevel, sizeof(newLevel), received_size, priority)) {
                 if (received_size == sizeof(newLevel)) {
                     g_logThreshold = static_cast<LogLevel>(newLevel);
-                    // Careful, when loglevel is greater than 2 it will not print
                     TRACE_WARN("Log threshold changed to %d", newLevel);
                 }
             }

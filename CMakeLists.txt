@@ -49,6 +49,7 @@ include_directories(
 add_executable(monitoring_system
     src/main.cpp
     src/NetworkThread.cpp
+    src/DataManagerThread.cpp
     src/network/TCPServer.cpp
     src/network/TCPSession.cpp
     src/network/TCPConnectionManager.cpp
