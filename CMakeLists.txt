@@ -34,7 +34,7 @@ endif()
 include_directories(
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/utils
-    ${PROJECT_SOURCE_DIR}/src/logging  # For your logging-related sources/headers
+    ${PROJECT_SOURCE_DIR}/src/logging
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -46,7 +46,7 @@ include_directories(
 #   - NetworkThread.cpp (which sets up the TCP server)
 #   - TCP server related sources: TCPServer.cpp, TCPSession.cpp, TCPConnectionManager.cpp
 # -------------------------------------------------------------------
-add_executable(monitoring_system
+add_executable(monitoringSystem
     src/main.cpp
     src/NetworkThread.cpp
     src/DataManagerThread.cpp
@@ -55,7 +55,7 @@ add_executable(monitoring_system
     src/network/TCPConnectionManager.cpp
 )
 
-target_link_libraries(monitoring_system ${Boost_LIBRARIES})
+target_link_libraries(monitoringSystem ${Boost_LIBRARIES})
 
 # -------------------------------------------------------------------
 # Logger Server executable (logger_server)
@@ -63,22 +63,22 @@ target_link_libraries(monitoring_system ${Boost_LIBRARIES})
 # This target builds your separate logging process.
 # It will have access to the logging headers from include/logging.
 # -------------------------------------------------------------------
-add_executable(logger_server
+add_executable(loggerServer
     services/LoggerServer.cpp
 )
 
-target_link_libraries(logger_server ${Boost_LIBRARIES})
+target_link_libraries(loggerServer ${Boost_LIBRARIES})
 
 # -------------------------------------------------------------------
 # Sensor Client executable (sensor_client)
 #
 # This target simulates sensor data by connecting to the TCP server.
 # -------------------------------------------------------------------
-add_executable(sensor_client
+add_executable(sensorClient
     clients/SensorClient.cpp
 )
 
-target_link_libraries(sensor_client ${Boost_LIBRARIES})
+target_link_libraries(sensorClient ${Boost_LIBRARIES})
 
 # -------------------------------------------------------------------
 # Set Log Level Utility executable (set_log_level)

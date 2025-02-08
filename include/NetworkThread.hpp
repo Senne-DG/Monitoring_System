@@ -13,7 +13,8 @@
  *
  * @param sensorBuffer Reference to a CircularBuffer of SensorData with a capacity of 1024 elements.
  */
-void start_network_thread(CircularBuffer<SensorData, 1024>& sensorBuffer);
+void start_network_thread(int argc, char* argv[], CircularBuffer<SensorData, 1024>& sensorBuffer);
+
 
 
 #endif // NETWORK_THREAD_HPP

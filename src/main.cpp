@@ -8,7 +8,7 @@
 #include "logging/LoggerClient.hpp"
 #include "logging/LogControl.hpp"
 
-int main() {
+int main(int argc, char* argv[]) {
     try {
         TRACE_INFO("Starting controlThread for controlling trace levels");
         std::thread ctrlThread = startControlThread();
@@ -18,7 +18,7 @@ int main() {
 
         TRACE_INFO("Threads are starting up...");
         // Start the network thread (producer) that writes sensor data to the buffer.
-        std::thread networkThread(start_network_thread, std::ref(sensorBuffer));
+        std::thread networkThread(start_network_thread, argc, argv, std::ref(sensorBuffer));
 
         // Start the data manager thread (consumer) that reads sensor data, filters it, and checks for anomalies.
         std::thread dataManagerThread(start_data_manager_thread, std::ref(sensorBuffer));
